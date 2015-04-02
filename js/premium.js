@@ -56,10 +56,11 @@ $(function() {
         },
 
         getAllCat: function() {
+            console.log('test');
             return model.data;
+
         }
     };
-
 
     var catAreaView = {
         init: function() {
