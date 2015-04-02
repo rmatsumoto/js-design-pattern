@@ -56,7 +56,7 @@ $(function() {
         },
 
         getAllCat: function() {
-            console.log('test');
+            console.log('testing something');
             return model.data;
 
         }
