@@ -23,6 +23,30 @@
                 </h3>
             </div>
         </div>
+
+        <div class="admin-wrapper">
+            <button id="adminBtn" class="admin-btn">Admin</button>
+            <div class="hidden admin-panel">
+                <form id="updateForm" action="">
+                    <div class="input-wrapper">
+                        <label for="inputCatName">Cat's name</label>
+                        <input type="text" id="inputCatName">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="inputImgUrl">Image URL</label>
+                        <input type="text" id="inputImgUrl">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="inputNumClicks">Number of Clicks</label>
+                        <input type="text" id="inputNumClicks">
+                    </div>
+                    <div class="btn-wrapper">
+                        <input type="submit" value="Update">
+                        <button id="cancelBtn">Cancel</button>    
+                    </div>
+                </form>
+            </div>
+        </div>
     </section>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

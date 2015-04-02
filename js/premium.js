@@ -1,5 +1,3 @@
-
-
 $(function() {
     var model = {
         data: [
@@ -28,13 +26,16 @@ $(function() {
                 fName: 'cat5.jpg',
                 counter: 0
             },
-        ]
+        ],
+
+        currentCat: 0
     };
 
     var octopus = {
         init: function() {
             listView.init();
             catAreaView.init();
+            adminView.init();
         },
 
         updateCount: function(data) {
@@ -50,32 +51,32 @@ $(function() {
                 var cat = cats[i];
 
                 if (catName === cat.name) {
-                    catAreaView.render(cat);
+                    return cat;
                 };
             }
         },
 
         getAllCat: function() {
-            console.log('testing something');
             return model.data;
-
         }
     };
 
     var catAreaView = {
         init: function() {
+            var self = this;
             var cats = octopus.getAllCat();
             var img = $('#catImg');
             var list = '';    
 
             $('.cat-name').on('click', function() {
+                console.log($(this));
                 img.off('click');
-                octopus.getCat($(this).text());
+                var data = octopus.getCat($(this).text());
+                self.render(data);
             });
-            octopus.getCat(cats[0].name);
+            var data = octopus.getCat(cats[0].name);
+            self.render(data);
         },
-
-        
 
         render: function(data) {
             var title = $('#catName');
@@ -101,15 +102,46 @@ $(function() {
             this.$listEl = $('#catList')
 
             for(var i = 0; cats.length > i; i++) {
-                list += this.makeList(cats[i].name);
+                list += this.makeList(cats[i].name, i);
             }
 
             this.$listEl.html(list);
         },
 
-        makeList: function(name) {
-            var list = '<li class="cat-name">' + name + '</li>';
+        makeList: function(name, i) {
+            var list = '<li class="cat-name" data-id="' + i + '" >' + name + '</li>';
             return list;
+        }
+    };
+
+    var adminView = {
+        init: function() {
+            var self = this;
+
+            self.adminBtn = $('#adminBtn');
+            self.adminPanel = $('.admin-panel');
+            self.form = $('#updateForm');
+            self.inputName = $('#inputCatName');
+            self.imgURL = $('#inputImgUrl');
+            self.numClicks = $('#inputNumClicks');
+            self.cancelBtn = $('#cancelBtn');
+
+            // Initiate admin panel
+            self.adminBtn.on('click', function() {
+                self.adminPanel.show();
+                self.generateFields();
+            });
+
+            // Hide admin panel
+            self.cancelBtn.on('click', function(e) {
+                e.preventDefault();
+                self.adminPanel.hide();
+            });
+        },
+
+        // D = data from model through octopus 
+        generateFields: function() {
+
         }
     }
 
