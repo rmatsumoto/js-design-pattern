@@ -44,20 +44,42 @@ $(function() {
             count.text(data.counter);
         },
 
-        getCat: function(catName) {
-            var cats = this.getAllCat();
+        getCat: function(catID) {
+            var cats = this.getAllCat();            
+            model.currentCat = catID;
 
-            for(var i = 0; cats.length > i; i++) {
-                var cat = cats[i];
+            var cat = cats[model.currentCat];
 
-                if (catName === cat.name) {
-                    return cat;
-                };
-            }
+            return cat; 
         },
 
         getAllCat: function() {
             return model.data;
+        },
+
+        updateCatData: function(d) {
+            var currentCat = model.data[model.currentCat];
+    
+            for (var i = d.length - 1; i >= 0; i--) {
+                var data = d[i];
+
+                switch(data.name) {
+                    case "inputCatName":
+                        currentCat.name = data.value;
+                        break;
+
+                    case "inputImgUrl":
+                        currentCat.fName = data.value;
+                        break;
+
+                    case "inputNumClicks":
+                        currentCat.counter = data.value;
+                        break;
+                }
+            };
+
+            catAreaView.render(currentCat);
+            listView.init();
         }
     };
 
@@ -68,13 +90,13 @@ $(function() {
             var img = $('#catImg');
             var list = '';    
 
-            $('.cat-name').on('click', function() {
-                console.log($(this));
+            $('#main').on('click', '.cat-name', function() {
                 img.off('click');
-                var data = octopus.getCat($(this).text());
+
+                var data = octopus.getCat($(this).data('id'));
                 self.render(data);
             });
-            var data = octopus.getCat(cats[0].name);
+            var data = octopus.getCat(0);
             self.render(data);
         },
 
@@ -82,10 +104,16 @@ $(function() {
             var title = $('#catName');
             var img = $('#catImg');
             var count = $('#counter');
+            
+            if (data.fName.indexOf('http') >= 0) {
+                img.attr('src', data.fName);
+            }
+            else {
+                img.attr('src', '/img/' + data.fName);
+            }
 
             title.text(data.name);
             count.text(data.counter);
-            img.attr('src', '/img/' + data.fName);
 
             img.on('click', (function() {
                 return function() {
@@ -120,16 +148,12 @@ $(function() {
 
             self.adminBtn = $('#adminBtn');
             self.adminPanel = $('.admin-panel');
-            self.form = $('#updateForm');
-            self.inputName = $('#inputCatName');
-            self.imgURL = $('#inputImgUrl');
-            self.numClicks = $('#inputNumClicks');
+            self.updateForm = $('#updateForm');            
             self.cancelBtn = $('#cancelBtn');
 
             // Initiate admin panel
             self.adminBtn.on('click', function() {
                 self.adminPanel.show();
-                self.generateFields();
             });
 
             // Hide admin panel
@@ -137,11 +161,22 @@ $(function() {
                 e.preventDefault();
                 self.adminPanel.hide();
             });
+
+            self.updateForm.on('submit', function(e) {
+                e.preventDefault();
+
+                self.updateCats($(this));
+                
+            });
         },
 
-        // D = data from model through octopus 
-        generateFields: function() {
+        updateCats: function(data) {
+            var updateData = data.serializeArray();
 
+            octopus.updateCatData(updateData);
+
+            this.updateForm.find('input:not([type=submit])').val("");
+            this.adminPanel.hide();
         }
     }
 
