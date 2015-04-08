@@ -307,7 +307,7 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .edit-btn {
-	right: 40px;
+	right: 50px;
 }
 
 #todo-list li .destroy:hover,
